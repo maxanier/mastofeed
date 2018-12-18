@@ -6,6 +6,7 @@ var cors = require('cors');
 var log = console.log;
 
 var app = Express();
+const prefix = process.env.PATH_PREFIX || "";
 
 function logMiddleware(req,res,next){
 	log(req.method.toUpperCase() +' '+ req.url);
@@ -68,10 +69,12 @@ app.get('/api/feed',cors(),function(req,res){
 	}
 	opts.feedUrl = feedUrl;
 	opts.mastofeedUrl = req.url;
+        opts.prefix = prefix;
 
 	var req = request.get(feedUrl);
 	convert(req,opts,function(er,data){
 		if (er){
+                        log(er);
 			res.status(500);
 			return res.send('Error fetching or parsing your feed.');
 		}
