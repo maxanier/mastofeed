@@ -10,7 +10,7 @@ var errorPage = require('./lib/errorPage');
 var morgan = require('morgan');
 
 var app = Express();
-
+const prefix = process.env.PATH_PREFIX || "";
 var logger = morgan(':method :url :status via :referrer - :response-time ms') 
 
 app.use(
@@ -102,6 +102,7 @@ app.get('/apiv2/feed',cors(),logger,function(req,res){
 	opts.userUrl = userUrl;
 	opts.feedUrl = feedUrl;
 	opts.mastofeedUrl = req.url;
+    opts.prefix = prefix;
 
 	convertv2(opts).then((data)=>{
 		res.status(200);
@@ -116,5 +117,5 @@ app.get('/apiv2/feed',cors(),logger,function(req,res){
 })
 
 app.listen(process.env.PORT || 8000,function(){
-	console.log('Server started, listening on '+(process.env.PORT || 8000));
+	console.log('Server started, listening on '+(process.env.PORT || 8000)+ ' with prefix '+prefix);
 });
